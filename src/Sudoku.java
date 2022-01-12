@@ -9,9 +9,9 @@ import java.util.Scanner;
 public class Sudoku {
 	
 	private int [][] field = new int[9][9];
+	private ArrayList<Integer> [][] possVals = new ArrayList [9][9];
 	//[row][column]
 	
-	private ArrayList<Integer> [][] possVals = new ArrayList [9][9];
 	
 	public Sudoku() {
 		for (int i = 0;i<9;i++) {
@@ -19,6 +19,7 @@ public class Sudoku {
 				this.field[0][0] = 0;
 			}
 		}
+		setPossVals();
 	}
 	
 	public Sudoku(int[][] field) {
@@ -29,10 +30,12 @@ public class Sudoku {
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		setPossVals();
 	}
 	
 	public void setField(int row, int col, int val) {
 		this.field[row][col] = val;
+		setPossVals();
 	}
 	
 	public int getField(int row, int col) {
@@ -64,9 +67,35 @@ public class Sudoku {
 		return out;
 	}
 	
-	public void setPossVals(int row, int col) {
-		//setting the possible value for a field
+	public boolean checkRowColBlock(int row, int col, int val) {
+		//returns true if the value is contained in the Block, Row or Col. 
+		boolean trueRow = ((Arrays.asList(getRow(row)).contains(val)));
+		boolean trueCol = ((Arrays.asList(getCol(col)).contains(val)));
+		int[][] block = getBlock(row, col);
+		boolean trueBlock = ((Arrays.asList(block[0])).contains(val)) ||
+				((Arrays.asList(block[1])).contains(val)) ||
+				((Arrays.asList(block[2])).contains(val));
+		
+		return (trueRow || trueCol || trueBlock);
+	}
+	
+	public ArrayList<Integer> [][] getPossVals() {
+		return this.possVals;
+	}
+	
+	public void setPossVals() {
 		for (int i = 0; i<9;i++) {
+			for (int j = 0; j<9;j++) {
+				possValField(i, j);
+			}
+		}
+	}
+	
+	private void possValField(int row, int col) {
+		//setting the possible value for a field
+		//based on feedback of checkRowColBlock
+		//this.possVals[row][col].clear();
+		for (int i = 1; i<10;i++) {
 			if (checkRowColBlock(row, col, i) == true) {
 				this.possVals[row][col].add(i);
 			}
@@ -74,19 +103,6 @@ public class Sudoku {
 				continue;
 			}
 		}
-	}
-	
-	
-	private boolean checkRowColBlock(int row, int col, int val) {
-		//returns true if the value is contained in the Block, Row or Col. 
-		boolean trueRow = ((Arrays.asList(getRow(row)).contains(val)));
-		boolean trueCol = ((Arrays.asList(getCol(col)).contains(val)));
-		int[][] block = getBlock(row, col);
-		boolean trueBlock = ((Arrays.asList(block[0])).contains(val)) ||
-				((Arrays.asList(block[0])).contains(val)) ||
-				((Arrays.asList(block[0])).contains(val));
-		
-		return (trueRow || trueCol || trueBlock);
 	}
 	
 	public String toString() {
@@ -100,6 +116,4 @@ public class Sudoku {
 		}
 		return out;
 	}
-	
-	
 }

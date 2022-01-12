@@ -11,6 +11,9 @@ public class SudokuTest {
 		System.out.println(s1.toString());
 		
 		System.out.println(arraytoString(s1.getBlock(0, 0)));
+		
+		System.out.println(s1.getPossVals()[0][0]);
+		System.out.println(s1.checkRowColBlock(0, 0, 9));
 	}
 	
 	
