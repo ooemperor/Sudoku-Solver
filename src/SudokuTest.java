@@ -1,4 +1,4 @@
-package Sudoku;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class SudokuTest {
 	//Test
 	public static void main(String[] args) throws FileNotFoundException {
-		Sudoku s1 = new Sudoku(readSudoku("src/Sudoku/SudokuA.txt"));
+		Sudoku s1 = new Sudoku(readSudoku("src/SudokuA.txt"));
 		System.out.println(s1.toString());
 		
 		System.out.println(arraytoString(s1.getBlock(0, 0)));
