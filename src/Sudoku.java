@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Sudoku {
 	
 	private int [][] field = new int[9][9];
-	private ArrayList<Integer> [][] possVals = new ArrayList [9][9];
+	private ArrayList<Integer>[][] possVals = new ArrayList [9][9];
 	//[row][column]
 	
 	
@@ -29,6 +29,12 @@ public class Sudoku {
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
+		}
+		//Making the ArrayLists in the Array
+		for (int i = 0; i<9;i++) {
+			for (int j = 0; j<9;j++) {
+				this.possVals[i][j] = new ArrayList<Integer>();
+			}
 		}
 		setPossVals();
 	}
@@ -69,12 +75,12 @@ public class Sudoku {
 	
 	public boolean checkRowColBlock(int row, int col, int val) {
 		//returns true if the value is contained in the Block, Row or Col. 
-		boolean trueRow = ((Arrays.asList(getRow(row)).contains(val)));
-		boolean trueCol = ((Arrays.asList(getCol(col)).contains(val)));
+		boolean trueRow = (SudokuTest.arraySearch(getRow(row), val));
+		boolean trueCol = (SudokuTest.arraySearch(getCol(col), val));
 		int[][] block = getBlock(row, col);
-		boolean trueBlock = ((Arrays.asList(block[0])).contains(val)) ||
-				((Arrays.asList(block[1])).contains(val)) ||
-				((Arrays.asList(block[2])).contains(val));
+		boolean trueBlock = ((SudokuTest.arraySearch(block[0], val)) ||
+				(SudokuTest.arraySearch(block[1], val)) ||
+				(SudokuTest.arraySearch(block[2], val)));
 		
 		return (trueRow || trueCol || trueBlock);
 	}
@@ -94,15 +100,53 @@ public class Sudoku {
 	private void possValField(int row, int col) {
 		//setting the possible value for a field
 		//based on feedback of checkRowColBlock
-		//this.possVals[row][col].clear();
-		for (int i = 1; i<10;i++) {
-			if (checkRowColBlock(row, col, i) == true) {
-				this.possVals[row][col].add(i);
-			}
-			else {
-				continue;
+		this.possVals[row][col].clear();
+		if (this.field[row][col] != 0) {
+			this.possVals[row][col].add(-1);
+		}
+		else {
+			for (int i = 1; i<10;i++) {
+				if (checkRowColBlock(row, col, i) == false) {
+					this.possVals[row][col].add(i);
+				}
+				else {
+					continue;
+				}
 			}
 		}
+	}
+	
+	public boolean isSolved() {
+		boolean solved = true;
+		
+		for (int i = 0; i<9;i++) {
+			for (int j = 0; j<9;j++) {
+				if (((getPossVals()[i][j]).get(0) != -1)){
+					solved = false;
+				}
+			}
+		}
+		return solved;
+	}
+	
+	
+	public void solve() {
+		
+		while (!isSolved()) {
+			for (int i2 = 0; i2<9;i2++) {
+				for (int j2 = 0; j2<9;j2++) {
+					if (((getPossVals()[i2][j2]).size() == 1) && (getPossVals()[i2][j2]).get(0) != -1) {
+						this.field[i2][j2] = getPossVals()[i2][j2].get(0);
+					}
+				}
+			}
+			setPossVals();
+		}
+	}
+	
+	public int[][] getCopy() {
+		int[][] copy = this.field;
+		return copy;
 	}
 	
 	public String toString() {

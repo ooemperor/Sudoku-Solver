@@ -1,7 +1,10 @@
 
 
 import java.io.*;
+import java.lang.*;
+import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class SudokuTest {
@@ -10,15 +13,23 @@ public class SudokuTest {
 		Sudoku s1 = new Sudoku(readSudoku("src/SudokuA.txt"));
 		System.out.println(s1.toString());
 		
+		/*
 		System.out.println(arraytoString(s1.getBlock(0, 0)));
-		
-		System.out.println(s1.getPossVals()[0][0]);
+		System.out.println(s1.getPossVals()[4][4]);
+		for (int i = 0; i<9;i++) {
+			for (int j = 0; j<9;j++) {
+				if (((s1.getPossVals()[i][j]).size() == 1) && (s1.getPossVals()[i][j]).get(0) != -1) {
+					System.out.println(i+ " "+ j);
+				}
+			}
+		}
 		System.out.println(s1.checkRowColBlock(0, 0, 9));
+		*/
+		s1.solve();
+		System.out.println(s1.toString());
+		
+		
 	}
-	
-	
-	
-	
 	
 	
 	public static int[][] readSudoku(String filePath) throws FileNotFoundException {
@@ -66,5 +77,14 @@ public class SudokuTest {
 			out += "\n   ";
 		}
 		return out;
+	}
+	
+	public static boolean arraySearch(int[] a, int val) {
+		for (int i : a) {
+			if (i == val) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
