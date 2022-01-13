@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class SudokuTest {
 	//Test
 	public static void main(String[] args) throws FileNotFoundException {
-		Sudoku s1 = new Sudoku(readSudoku("src/SudokuA.txt"));
+		Sudoku s1 = new Sudoku(readSudoku("src/SudokuB.txt"));
 		System.out.println(s1.toString());
 		
 		/*

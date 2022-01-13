@@ -130,9 +130,9 @@ public class Sudoku {
 	}
 	
 	
-	public void solve() {
-		
-		while (!isSolved()) {
+	public boolean solve() {
+		int counter = 0;
+		while (!isSolved() && counter < 100) {
 			for (int i2 = 0; i2<9;i2++) {
 				for (int j2 = 0; j2<9;j2++) {
 					if (((getPossVals()[i2][j2]).size() == 1) && (getPossVals()[i2][j2]).get(0) != -1) {
@@ -141,13 +141,16 @@ public class Sudoku {
 				}
 			}
 			setPossVals();
+			counter++;
 		}
+		return isSolved();
 	}
 	
-	public int[][] getCopy() {
+	public int[][] getCopyOfField() {
 		int[][] copy = this.field;
 		return copy;
 	}
+
 	
 	public String toString() {
 		//toString Method for the Board. 
