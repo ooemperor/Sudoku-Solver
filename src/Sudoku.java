@@ -12,6 +12,7 @@ public class Sudoku {
 	
 	private int [][] field = new int[9][9];
 	private ArrayList<Integer>[][] possVals = new ArrayList [9][9];
+	private Sudoku copy;
 	//[row][column]
 	
 	
@@ -91,7 +92,7 @@ public class Sudoku {
 		return this.possVals;
 	}
 	
-	private void setPossVals() {
+	public void setPossVals() {
 		for (int i = 0; i<9;i++) {
 			for (int j = 0; j<9;j++) {
 				possValField(i, j);
@@ -119,6 +120,7 @@ public class Sudoku {
 	}
 	
 	public boolean isSolved() throws IndexOutOfBoundsException {
+		//Checking if all fields are occupied or can be occupied
 		boolean solved = true;
 		
 		for (int i = 0; i<9;i++) {
@@ -135,76 +137,27 @@ public class Sudoku {
 		return solved;
 	}
 	
-	
-	/*
-	//commented out because there might be logical problem in this part
-	//to be revisited if necessary later. 
-	public boolean solve() throws IndexOutOfBoundsException {
-		int counter = 0;
-		while (!isSolved() && counter < 100) {
-			for (int i2 = 0; i2<9;i2++) {
-				for (int j2 = 0; j2<9;j2++) {
-					if (((getPossVals()[i2][j2]).size() == 1) && (getPossVals()[i2][j2]).get(0) != -1) {
-						this.field[i2][j2] = getPossVals()[i2][j2].get(0);
-					}
-				}
-			}
-			setPossVals();
-			counter++;
-		}
-		if (!isSolved()) {
-			Sudoku copy = this.getCopyOfSudoku();
-			for (int i3 = 0; i3<9;i3++) {
-				for (int j3 = 0; j3<9;j3++) {
-					
-					if (((copy.getPossVals()[i3][j3]).size() > 1)) {
-						for (int pos = 0; pos< (copy.getPossVals()[i3][j3].size()); pos++) {
-							copy = this.getCopyOfSudoku();
-							copy.field[i3][j3] = copy.getPossVals()[i3][j3].get(pos);
-							copy.setPossVals();
-							System.out.println(copy.toString());
-							System.out.println(i3 + " "+ j3);
-							System.out.println(copy.getPossVals()[i3][j3]);
-							try {
-								copy.solve();
-								if (copy.isSolved() == true) {
-									this.field = copy.field;
-									this.possVals = copy.possVals;
-									return isSolved();
-								}	
-							}
-							catch (IndexOutOfBoundsException e) {
-								System.out.println("i skipped one");
-								System.out.println(i3 + "" + j3);
-								continue;
-							}
-						}
-					}
-				}
+	public boolean isCorrect() {
+		//Testing if Solution is correct
+		int product = 1;
+		for (int i = 0; i<9;i++) {
+			for (int j = 0; j<9;j++) {
+				int fieldValue = getField(i,j);
+				product *= SudokuTest.arrayCount(getRow(i), fieldValue);
+				product *= SudokuTest.arrayCount(getCol(j), fieldValue);
+				product *= (SudokuTest.arrayCount(getBlock(i,j)[0], fieldValue) +
+				 SudokuTest.arrayCount(getBlock(i,j)[1], fieldValue) + 
+				 SudokuTest.arrayCount(getBlock(i,j)[2], fieldValue));
 			}
 		}
-		return isSolved();
+		return (product == 1);
 	}
-	*/
-	
-	public boolean solve() {
-		while (true) {
-			try {
-				System.out.println("i try");
-				boolean solv = this.trySolve();
-				if (solv) {
-					break;
-				}
-			}
-			catch (IndexOutOfBoundsException err) {
-				System.out.println("Error");
-			}
-		}
-		return true;
-	}
+
 	
 	public boolean trySolve() throws IndexOutOfBoundsException {
+		//Tries to sovle the sukodu
 		
+		//first way is to fill in the definitely correct values
 		int counter = 0;
 		while (!isSolved() && counter < 100) {
 			for (int i2 = 0; i2<9;i2++) {
@@ -218,13 +171,14 @@ public class Sudoku {
 			counter++;
 		}
 
-
+		//Random tries to solve the Puzzle
 		while (!isSolved()) {
-			Sudoku copy = this.getCopyOfSudoku();
+			this.copy = this.getCopyOfSudoku();
 			Random rand = new Random();
 			int row = rand.nextInt(9);
 			int col = rand.nextInt(9);
 			ArrayList<Integer> possVal = (copy.getPossVals()[row][col]);
+			
 			if (( possVal.size() > 1)) {
 				copy.field[row][col] = possVal.get(rand.nextInt(possVal.size()));
 				copy.setPossVals();
@@ -237,16 +191,14 @@ public class Sudoku {
 				} catch (Exception er) {
 					break;
 				}
-				
 			}
 		}
 		return isSolved();
 	}
 		
-	private Sudoku getCopyOfSudoku() {
+	public Sudoku getCopyOfSudoku() {
 		return this;
 	}
-
 	
 	public String toString() {
 		//toString Method for the Board. 
