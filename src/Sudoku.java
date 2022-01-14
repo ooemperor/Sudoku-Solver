@@ -1,6 +1,7 @@
 
 
 import java.io.File;
+import java.io.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,7 +75,7 @@ public class Sudoku {
 		return out;
 	}
 	
-	public boolean checkRowColBlock(int row, int col, int val) {
+	private boolean checkRowColBlock(int row, int col, int val) {
 		//returns true if the value is contained in the Block, Row or Col. 
 		boolean trueRow = (SudokuTest.arraySearch(getRow(row), val));
 		boolean trueCol = (SudokuTest.arraySearch(getCol(col), val));
@@ -90,7 +91,7 @@ public class Sudoku {
 		return this.possVals;
 	}
 	
-	public void setPossVals() {
+	private void setPossVals() {
 		for (int i = 0; i<9;i++) {
 			for (int j = 0; j<9;j++) {
 				possValField(i, j);
@@ -124,8 +125,8 @@ public class Sudoku {
 			for (int j = 0; j<9;j++) {
 				
 				//Print statements used for debugging
-				System.out.println(i+ " "+ j);
-				System.out.println(getPossVals()[i][j]);
+				//System.out.println(i+ " "+ j);
+				//System.out.println(getPossVals()[i][j]);
 				if (((getPossVals()[i][j]).get(0) != -1)){
 					solved = false;
 				}
@@ -186,7 +187,23 @@ public class Sudoku {
 	}
 	*/
 	
-	public boolean solve() throws IndexOutOfBoundsException {
+	public boolean solve() {
+		while (true) {
+			try {
+				System.out.println("i try");
+				boolean solv = this.trySolve();
+				if (solv) {
+					break;
+				}
+			}
+			catch (IndexOutOfBoundsException err) {
+				System.out.println("Error");
+			}
+		}
+		return true;
+	}
+	
+	public boolean trySolve() throws IndexOutOfBoundsException {
 		
 		int counter = 0;
 		while (!isSolved() && counter < 100) {
@@ -201,8 +218,8 @@ public class Sudoku {
 			counter++;
 		}
 
-		boolean solv = false;
-		while (!solv) {
+
+		while (!isSolved()) {
 			Sudoku copy = this.getCopyOfSudoku();
 			Random rand = new Random();
 			int row = rand.nextInt(9);
@@ -212,17 +229,15 @@ public class Sudoku {
 				copy.field[row][col] = possVal.get(rand.nextInt(possVal.size()));
 				copy.setPossVals();
 				try {
-					if (copy.solve() == true) {
-						solv = true;
+					if (copy.trySolve() == true) {
+						
 						this.field = copy.field;
 						this.possVals = copy.possVals;
 					}
-					else {
-						copy.getCopyOfSudoku();
-					}
+				} catch (Exception er) {
+					break;
 				}
-				catch (Exception err) {
-				}
+				
 			}
 		}
 		return isSolved();
