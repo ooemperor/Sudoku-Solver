@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.*;
 
 public class Sudoku {
 	
@@ -121,6 +122,8 @@ public class Sudoku {
 		
 		for (int i = 0; i<9;i++) {
 			for (int j = 0; j<9;j++) {
+				
+				//Print statements used for debugging
 				System.out.println(i+ " "+ j);
 				System.out.println(getPossVals()[i][j]);
 				if (((getPossVals()[i][j]).get(0) != -1)){
@@ -132,7 +135,9 @@ public class Sudoku {
 	}
 	
 	
-	
+	/*
+	//commented out because there might be logical problem in this part
+	//to be revisited if necessary later. 
 	public boolean solve() throws IndexOutOfBoundsException {
 		int counter = 0;
 		while (!isSolved() && counter < 100) {
@@ -179,8 +184,50 @@ public class Sudoku {
 		}
 		return isSolved();
 	}
+	*/
 	
-	
+	public boolean solve() throws IndexOutOfBoundsException {
+		
+		int counter = 0;
+		while (!isSolved() && counter < 100) {
+			for (int i2 = 0; i2<9;i2++) {
+				for (int j2 = 0; j2<9;j2++) {
+					if (((getPossVals()[i2][j2]).size() == 1) && (getPossVals()[i2][j2]).get(0) != -1) {
+						this.field[i2][j2] = getPossVals()[i2][j2].get(0);
+					}
+				}
+			}
+			setPossVals();
+			counter++;
+		}
+
+		boolean solv = false;
+		while (!solv) {
+			Sudoku copy = this.getCopyOfSudoku();
+			Random rand = new Random();
+			int row = rand.nextInt(9);
+			int col = rand.nextInt(9);
+			ArrayList<Integer> possVal = (copy.getPossVals()[row][col]);
+			if (( possVal.size() > 1)) {
+				copy.field[row][col] = possVal.get(rand.nextInt(possVal.size()));
+				copy.setPossVals();
+				try {
+					if (copy.solve() == true) {
+						solv = true;
+						this.field = copy.field;
+						this.possVals = copy.possVals;
+					}
+					else {
+						copy.getCopyOfSudoku();
+					}
+				}
+				catch (Exception err) {
+				}
+			}
+		}
+		return isSolved();
+	}
+		
 	private Sudoku getCopyOfSudoku() {
 		return this;
 	}
