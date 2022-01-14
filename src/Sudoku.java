@@ -116,11 +116,13 @@ public class Sudoku {
 		}
 	}
 	
-	public boolean isSolved() {
+	public boolean isSolved() throws IndexOutOfBoundsException {
 		boolean solved = true;
 		
 		for (int i = 0; i<9;i++) {
 			for (int j = 0; j<9;j++) {
+				System.out.println(i+ " "+ j);
+				System.out.println(getPossVals()[i][j]);
 				if (((getPossVals()[i][j]).get(0) != -1)){
 					solved = false;
 				}
@@ -130,7 +132,8 @@ public class Sudoku {
 	}
 	
 	
-	public boolean solve() {
+	
+	public boolean solve() throws IndexOutOfBoundsException {
 		int counter = 0;
 		while (!isSolved() && counter < 100) {
 			for (int i2 = 0; i2<9;i2++) {
@@ -143,12 +146,43 @@ public class Sudoku {
 			setPossVals();
 			counter++;
 		}
+		if (!isSolved()) {
+			Sudoku copy = this.getCopyOfSudoku();
+			for (int i3 = 0; i3<9;i3++) {
+				for (int j3 = 0; j3<9;j3++) {
+					
+					if (((copy.getPossVals()[i3][j3]).size() > 1)) {
+						for (int pos = 0; pos< (copy.getPossVals()[i3][j3].size()); pos++) {
+							copy = this.getCopyOfSudoku();
+							copy.field[i3][j3] = copy.getPossVals()[i3][j3].get(pos);
+							copy.setPossVals();
+							System.out.println(copy.toString());
+							System.out.println(i3 + " "+ j3);
+							System.out.println(copy.getPossVals()[i3][j3]);
+							try {
+								copy.solve();
+								if (copy.isSolved() == true) {
+									this.field = copy.field;
+									this.possVals = copy.possVals;
+									return isSolved();
+								}	
+							}
+							catch (IndexOutOfBoundsException e) {
+								System.out.println("i skipped one");
+								System.out.println(i3 + "" + j3);
+								continue;
+							}
+						}
+					}
+				}
+			}
+		}
 		return isSolved();
 	}
 	
-	public int[][] getCopyOfField() {
-		int[][] copy = this.field;
-		return copy;
+	
+	private Sudoku getCopyOfSudoku() {
+		return this;
 	}
 
 	
