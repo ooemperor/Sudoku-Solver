@@ -11,7 +11,7 @@ public class SudokuTest {
 		System.out.println(s2.isCorrect());
 		Sudoku s3 = new Sudoku(readSudoku("src/SudokuA.txt"));
 		System.out.println(s3.toString());
-		solveSudoku(s3);
+		solveSudoku("src/SudokuD.txt");
 
 		
 		
@@ -23,7 +23,7 @@ public class SudokuTest {
 		System.out.println(s1.toString());
 		while (true) {
 			try {
-				s1 = new Sudoku(readSudoku("src/SudokuD.txt"));
+				s1 = new Sudoku(readSudoku(path));
 				s1.trySolve();
 				System.out.println("Checking if Solution is valid");
 				if (s1.isCorrect()) {
@@ -39,12 +39,14 @@ public class SudokuTest {
 		System.out.println(s1.toString());
 	
 	}
+	
+	/*
 	public static void solveSudoku(Sudoku s) {
-		Sudoku s1 = s;
+		Sudoku s1 = new Sudoku(s.getField());
 		System.out.println(s1.toString());
 		while (true) {
 			try {
-				s1 = new Sudoku(readSudoku("src/SudokuD.txt"));
+				s1 = new Sudoku(s.getField());
 				s1.trySolve();
 				System.out.println("Checking if Solution is valid");
 				if (s1.isCorrect()) {
@@ -60,7 +62,7 @@ public class SudokuTest {
 		System.out.println(s1.toString());
 	
 	}
-	
+	*/
 
 	public static int[][] readSudoku(String filePath) throws FileNotFoundException {
 

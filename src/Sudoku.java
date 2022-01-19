@@ -47,6 +47,10 @@ public class Sudoku {
 		setPossVals();
 	}
 	
+	public int[][] getField(){
+		return this.field;
+	}
+	
 	public int getField(int row, int col) {
 		return this.field[row][col];
 	}
