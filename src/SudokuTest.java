@@ -9,7 +9,7 @@ public class SudokuTest {
 		Sudoku s2 = new Sudoku(readSudoku("src/SudokuSolved.txt"));
 		System.out.println(s2.toString());
 		System.out.println(s2.isCorrect());
-		Sudoku s3 = new Sudoku(readSudoku("src/SudokuD.txt"));
+		Sudoku s3 = new Sudoku(readSudoku("src/SudokuA.txt"));
 		System.out.println(s3.toString());
 		solveSudoku(s3);
 
